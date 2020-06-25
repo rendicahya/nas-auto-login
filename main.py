@@ -22,6 +22,6 @@ while True:
     res = post(url, data=data).content.decode('utf-8').replace("'", '"')
     res_json = json.loads(res)
 
-    print('Success' if res_json['success'] else 'Fail', res_json['msg'])
+    print('Success:' if res_json['success'] else 'Failure:', res_json['msg'])
     logging.info(res)
     sleep(int(interval) * 60)
