@@ -1,3 +1,4 @@
+import json
 import logging
 from os import getenv
 from time import sleep
@@ -18,7 +19,9 @@ data = {'opr': 'pwdLogin',
         }
 
 while True:
-    res = post(url, data=data).content.decode('utf-8')
+    res = post(url, data=data).content.decode('utf-8').replace("'", '"')
+    res_json = json.loads(res)
 
+    print('Success' if res_json['success'] else 'Fail', res_json['msg'])
     logging.info(res)
     sleep(int(interval) * 60)
