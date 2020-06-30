@@ -39,5 +39,7 @@ if __name__ == '__main__':
     login()
     schedule.every(interval).minutes.do(login)
 
+    print(f'Logging in every {interval} minutes...')
+
     while True:
         time.sleep(1)
