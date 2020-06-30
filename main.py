@@ -36,9 +36,10 @@ if __name__ == '__main__':
 
     interval = int(getenv('NAS_INTERVAL'))
 
+    schedule.every(interval).minutes.do(login)
     print(f'Logging in every {interval} minutes...')
     login()
 
     while True:
-        schedule.every(interval).minutes.do(login)
+        schedule.run_pending()
         time.sleep(1)
