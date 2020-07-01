@@ -35,6 +35,7 @@ def login():
         print(now, 'Success:' if res_json['success'] else 'Failure:', res_json['msg'])
         logging.info(res)
 
+
 def main():
     load_dotenv()
 
