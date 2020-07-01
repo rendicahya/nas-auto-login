@@ -35,8 +35,7 @@ def login():
         print(now, 'Success:' if res_json['success'] else 'Failure:', res_json['msg'])
         logging.info(res)
 
-
-if __name__ == '__main__':
+def main():
     load_dotenv()
 
     interval = int(getenv('NAS_INTERVAL'))
@@ -48,3 +47,7 @@ if __name__ == '__main__':
     while True:
         schedule.run_pending()
         time.sleep(1)
+
+
+if __name__ == '__main__':
+    main()
