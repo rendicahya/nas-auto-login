@@ -7,6 +7,7 @@ from os import getenv
 import schedule
 from dotenv import load_dotenv
 from requests import post
+from requests.exceptions import RequestException
 
 
 def login():
@@ -23,12 +24,16 @@ def login():
             'rememberPwd': '0'
             }
 
-    res = post(url, data=data).content.decode('utf-8').replace("'", '"')
-    res_json = json.loads(res)
-    now = datetime.now().strftime(time_format)
+    try:
+        res = post(url, data=data).content.decode('utf-8').replace("'", '"')
+    except RequestException as err:
+        print(err)
+    else:
+        res_json = json.loads(res)
+        now = datetime.now().strftime(time_format)
 
-    print(now, 'Success:' if res_json['success'] else 'Failure:', res_json['msg'])
-    logging.info(res)
+        print(now, 'Success:' if res_json['success'] else 'Failure:', res_json['msg'])
+        logging.info(res)
 
 
 if __name__ == '__main__':
