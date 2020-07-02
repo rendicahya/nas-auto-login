@@ -10,12 +10,14 @@ from requests import post
 from requests.exceptions import RequestException
 
 
-def login():
+def login(log_to_file=False, print_message=True):
     time_format = '%a %d-%b-%Y %H:%M:%S'
 
+    if log_to_file:
+        logging.basicConfig(filename='access.log', level=logging.INFO, format='%(asctime)s: %(message)s',
+                            datefmt=time_format)
+
     load_dotenv()
-    logging.basicConfig(filename='access.log', level=logging.INFO, format='%(asctime)s: %(message)s',
-                        datefmt=time_format)
 
     url = 'http://nas.ub.ac.id/ac_portal/login.php'
     data = {'opr': 'pwdLogin',
@@ -32,8 +34,11 @@ def login():
         res_json = json.loads(res)
         now = datetime.now().strftime(time_format)
 
-        print(now, 'Success:' if res_json['success'] else 'Failure:', res_json['msg'])
-        logging.info(res)
+        if print_message:
+            print(now, 'Success:' if res_json['success'] else 'Failure:', res_json['msg'])
+
+        if log_to_file:
+            logging.info(res)
 
 
 def main():
