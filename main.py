@@ -36,7 +36,7 @@ def login():
 def main():
     load_dotenv()
 
-    interval = int(getenv('NAS_INTERVAL'))
+    interval = int(getenv('NAS_INTERVAL', default=5))
 
     schedule.every(interval).minutes.do(login)
     logging.info(f'Logging in every {interval} minutes...')
