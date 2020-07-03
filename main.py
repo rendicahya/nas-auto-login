@@ -29,6 +29,8 @@ def login():
             resp_str = resp.content.decode('utf-8').replace("'", '"')
             resp_json = json.loads(resp_str)
 
+            print(resp_json['success'])
+
             if resp_json['success']:
                 logging.info(resp_json['msg'])
             else:
