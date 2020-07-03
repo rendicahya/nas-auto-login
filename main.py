@@ -25,8 +25,6 @@ def login():
     except RequestException:
         logging.error('Failed logging in')
     else:
-        logging.info(resp.status_code)
-
         if resp.status_code == 200:
             resp_str = resp.content.decode('utf-8').replace("'", '"')
             resp_json = json.loads(resp_str)
