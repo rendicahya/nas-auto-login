@@ -1,7 +1,6 @@
 import json
 import logging
 import time
-from datetime import datetime
 from os import getenv
 
 import schedule
@@ -10,35 +9,28 @@ from requests import post
 from requests.exceptions import RequestException
 
 
-def login(log_to_file=False, print_message=True):
-    time_format = '%a %d-%b-%Y %H:%M:%S'
-
-    if log_to_file:
-        logging.basicConfig(filename='access.log', level=logging.INFO, format='%(asctime)s: %(message)s',
-                            datefmt=time_format)
-
+def login():
     load_dotenv()
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s %(asctime)s: %(message)s')
 
     url = 'http://nas.ub.ac.id/ac_portal/login.php'
-    data = {'opr': 'pwdLogin',
-            'userName': getenv('NAS_USERNAME'),
-            'pwd': getenv('NAS_PASSWORD'),
-            'rememberPwd': '0'
-            }
+    data = {
+        'opr': 'pwdLogin',
+        'userName': getenv('NAS_USERNAME'),
+        'pwd': getenv('NAS_PASSWORD'),
+        'rememberPwd': '0'
+    }
 
     try:
-        res = post(url, data=data).content.decode('utf-8').replace("'", '"')
-    except RequestException as err:
-        print(err)
+        resp = post(url, data=data)
+    except RequestException as e:
+        logging.error('Failed logging in')
     else:
-        res_json = json.loads(res)
-        now = datetime.now().strftime(time_format)
+        if resp.status_code == 200:
+            resp_str = resp.content.decode('utf-8').replace("'", '"')
+            resp_json = json.loads(resp_str)
 
-        if print_message:
-            print(now, 'Success:' if res_json['success'] else 'Failure:', res_json['msg'])
-
-        if log_to_file:
-            logging.info(res)
+            logging.info('Success:' if resp_json['success'] else 'Failure:', resp_json['msg'])
 
 
 def main():
@@ -47,7 +39,7 @@ def main():
     interval = int(getenv('NAS_INTERVAL'))
 
     schedule.every(interval).minutes.do(login)
-    print(f'Logging in every {interval} minutes...')
+    logging.info(f'Logging in every {interval} minutes...')
     login()
 
     while True:
