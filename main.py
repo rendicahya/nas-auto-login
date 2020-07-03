@@ -11,7 +11,6 @@ from requests.exceptions import RequestException
 
 def login():
     load_dotenv()
-    logging.basicConfig(level=logging.INFO, format='%(levelname)s %(asctime)s: %(message)s')
 
     url = 'http://nas.ub.ac.id/ac_portal/login.php'
     data = {
@@ -23,9 +22,11 @@ def login():
 
     try:
         resp = post(url, data=data)
-    except RequestException as e:
+    except RequestException:
         logging.error('Failed logging in')
     else:
+        logging.info(resp.status_code)
+
         if resp.status_code == 200:
             resp_str = resp.content.decode('utf-8').replace("'", '"')
             resp_json = json.loads(resp_str)
@@ -35,6 +36,7 @@ def login():
 
 def main():
     load_dotenv()
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s %(asctime)s: %(message)s')
 
     interval = int(getenv('NAS_INTERVAL', default=5))
 
