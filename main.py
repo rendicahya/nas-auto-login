@@ -34,7 +34,7 @@ def login():
 
 def main():
     load_dotenv()
-    logging.basicConfig(level=logging.INFO, format='%(levelname)s %(asctime)s: %(message)s', datefmt='%A %d-%b-%Y %H:%M:%S')
+    logging.basicConfig(level=logging.INFO, format='%(levelname)s %(asctime)s: %(message)s', datefmt='%a %d-%b-%Y %H:%M:%S')
 
     interval = int(getenv('NAS_INTERVAL', default=5))
 
